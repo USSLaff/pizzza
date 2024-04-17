@@ -1,30 +1,38 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Pizzak from './components/Pizzas';
-import Navbar from './components/Navbar';
-import { PizzaPost } from './components/PizzaPost';
-import { PizzaPut } from './components/PizzaPut';
-import { PizzaSelect } from './components/PizzaSelect';
-import { DeleteConfirmModal } from './components/DelModal';
-
+import { BrowserRouter as Router, NavLink, Routes, Route } from "react-router-dom";
+import { PizzaListPage } from "./PizzaListPage";
+import { PizzaSinglePage } from "./PizzaSinglePage";
+import { PizzaCreatePage } from "./PizzaCreatePage";
+import { PizzaModPage } from "./PizzaModPage";
+import { PizzaDelPage } from "./PizzaDelPage";
+import './App.css';
 
 function App() {
-  const [pizzas, setPizzas] = React.useState([]);
-  const [isFetchPending, setFetchPending] = React.useState(true)
-  const [selectedPizza, setSelectedPizza] = React.useState({});
-
-
   return (
-      <BrowserRouter>
-        <Navbar pizzak={pizzas} setPizzak={setPizzas} setFetchPending={setFetchPending} isFetchPending={isFetchPending} />
-        <Routes>
-          <Route path={"/"} element={<Pizzak pizzak={pizzas} setPizzak={setPizzas} setSelectedPizza={setSelectedPizza} setFetchPending={setFetchPending} isFetchPending={isFetchPending}/>} />
-          <Route path={"/addPizza"} element={<PizzaPost pizzak={pizzas} setPizzak={setPizzas} setFetchPending={setFetchPending}/>} />
-          <Route path={"/updPizza/:id"} element={<PizzaPut selectedPizza={selectedPizza} setSelectedPizza={setSelectedPizza} setFetchPending={setFetchPending} isFetchPending={isFetchPending}/>} />
-          <Route path={"/pizza/:id"} element={<PizzaSelect selectedPizza={selectedPizza} setSelectedPizza={setSelectedPizza} />} />
-        </Routes>
-        <DeleteConfirmModal selectedPizza={selectedPizza} setFetchPending={setFetchPending} />
-      </BrowserRouter>
+    <Router>
+      <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <NavLink to={'/'} className={({isActive}) => "nav-link" + (isActive ? "active" : "")}>
+                <span className="nav-link">Pizzák</span>
+              </NavLink>
+              </li>
+              <li className="nav-item">
+              <NavLink to={'/uj-pizza'} className={({isActive}) => "nav-link" + (isActive ? "active" : "")}>
+                <span className="nav-link">Új pizza</span>
+              </NavLink>
+              </li>
+          </ul>
+        </div>
+      </nav>
+      <Routes>
+        <Route path="/" exact element={<PizzaListPage />} />
+        <Route path="/pizza/:pizzaId" exact element={<PizzaSinglePage />} />
+        <Route path="/uj-pizza" exact element={<PizzaCreatePage />} />
+        <Route path="/mod-pizza/:pizzaId" exact element={<PizzaModPage />} />
+        <Route path="/del-pizza/:pizzaId" exact element={<PizzaDelPage />} />
+      </Routes>
+    </Router>
   );
 }
 
